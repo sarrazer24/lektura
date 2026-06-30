@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String     @id
+  email     String     @unique
+  name      String?
+  aiEngine  String     @default("groq")
+  books     UserBook[]
+  createdAt DateTime   @default(now())
+}
+
+model UserBook {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  openLibraryId String
+  title         String
+  author        String
+  coverUrl      String?
+  pageCount     Int?
+  genres        String[]
+  status        String
+  finishedAt    DateTime?
+  quizzes       Quiz[]
+  createdAt     DateTime  @default(now())
+}
+
+model Quiz {
+  id           String    @id @default(uuid())
+  userBookId   String
+  userBook     UserBook  @relation(fields: [userBookId], references: [id])
+  questions    Json
+  score        Int?
+  completedAt  DateTime?
+  scheduledFor DateTime
+  attemptCount Int       @default(0)
+  generatedBy  String    @default("groq")
+  latencyMs    Int?
+  createdAt    DateTime  @default(now())
+}
+
+model CachedSummary {
+  id            String   @id @default(uuid())
+  openLibraryId String   @unique
+  title         String
+  content       Json
+  createdAt     DateTime @default(now())
+}

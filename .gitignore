@@ -1,9 +1,11 @@
 node_modules
-.next
-out
 
 .env
 .env.local
 .env.production
 
+.next
+out
+
 .vercel
+/lib/generated/prisma
